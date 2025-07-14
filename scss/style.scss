@@ -1,0 +1,75 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+#output {
+  text-align: center;
+}
+
+#no-support,
+#rotate-screen {
+  display: block;
+  text-align: center;
+  img {
+    width: 200px;
+    display: inline-block;
+  }
+
+  .texts {
+    margin-top: 20px;
+    padding-left: 25px;
+    padding-right: 25px;
+    h3 {
+      font-size: 15px;
+      &:last-child {
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+#rotate-screen {
+  img {
+    width: 140px;
+  }
+}
+
+#computer,
+#potrait,
+#landscape {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100svh;
+}
+
+#computer {
+  #rotate-screen {
+    display: none;
+  }
+}
+
+#potrait {
+  #no-support {
+    display: none;
+  }
+
+  #rotate-screen {
+    display: block;
+  }
+}
+
+#landscape {
+  #no-support,
+  #rotate-screen {
+    display: none;
+  }
+
+}
