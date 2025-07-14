@@ -12,6 +12,13 @@
   text-align: center;
 }
 
+h3 {
+  font-size: 15px;
+  padding-left: 25px;
+  padding-right: 25px;
+  margin-bottom: 8px;
+}
+
 #no-support,
 #rotate-screen {
   display: block;
@@ -23,10 +30,8 @@
 
   .texts {
     margin-top: 20px;
-    padding-left: 25px;
-    padding-right: 25px;
+
     h3 {
-      font-size: 15px;
       &:last-child {
         margin-top: 10px;
       }
@@ -41,7 +46,7 @@
 }
 
 #computer,
-#potrait,
+#portrait,
 #landscape {
   display: flex;
   align-items: center;
@@ -51,13 +56,19 @@
 }
 
 #computer {
-  #rotate-screen {
+  #rotate-screen,
+  #camera {
     display: none;
+  }
+
+  #no-support {
+    display: block;
   }
 }
 
-#potrait {
-  #no-support {
+#portrait {
+  #no-support,
+  #camera {
     display: none;
   }
 
@@ -72,4 +83,38 @@
     display: none;
   }
 
+  #camera {
+    display: block;
+  }
+}
+
+#camera {
+  .start {
+    // text-align: center;
+  }
+}
+
+button {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+#camera-btn {
+  background-color: #02ffb3;
+}
+
+#reload-btn {
+  background-color: #ca3d05;
+  color: #fff;
+}
+
+.btn-wrap {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.instruction {
+  display: none;
 }
