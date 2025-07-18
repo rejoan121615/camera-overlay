@@ -1,121 +1,133 @@
-const body = document.querySelector("body");
-// const openCameraBtn = document.querySelector("#camera-btn");
-const cameraAccessStatus = document.querySelector(
-  "#camera .camera-access span"
-);
-var camera = undefined;
-var cameraStream = undefined;
+// const body = document.querySelector("body");
+const openCameraBtn = document.querySelector("#camera-btn");
+// const cameraAccessStatus = document.querySelector(
+//   "#camera .camera-access span"
+// );
+// var camera = undefined;
+// var cameraStream = undefined;
 
-// openCameraBtn.addEventListener("click", () => {});
+//  openCameraBtn.addEventListener("click", (e) => {
+//   e.target.style.display = 'none'
+//   enterFullscreen();
+//   startCamera();
+//  });
 
-function enterFullscreen() {
-  const el = document.documentElement;
+// function enterFullscreen() {
+//   const el = document.documentElement;
 
-  if (el.requestFullscreen) {
-    el.requestFullscreen();
-  } else if (el.webkitRequestFullscreen) {
-    el.webkitRequestFullscreen(); // Safari
-  } else if (el.msRequestFullscreen) {
-    el.msRequestFullscreen(); // IE11
-  }
+//   console.log('your el ', el)
 
-  // optional: lock to landscape if supported
-  if (screen.orientation && screen.orientation.lock) {
-    screen.orientation.lock("landscape").catch((err) => {
-      console.warn("Orientation lock failed:", err);
-    });
-  }
-}
+//   if (el.requestFullscreen) {
+//     el.requestFullscreen();
+//   } else if (el.webkitRequestFullscreen) {
+//     el.webkitRequestFullscreen(); // Safari
+//   } else if (el.msRequestFullscreen) {
+//     el.msRequestFullscreen(); // IE11
+//   }
 
-// detect if it's a mobile phone
-const isMobile = () =>
-  /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) &&
-  navigator.maxTouchPoints > 1;
+//   // optional: lock to landscape if supported
+//   if (screen.orientation && screen.orientation.lock) {
+//     screen.orientation.lock("landscape").catch((err) => {
+//       console.warn("Orientation lock failed:", err);
+//     });
+//   }
+// }
 
-if (true) {
-  // trigger portrait as default
-  body.id = "portrait";
-  const screenStatus = window.matchMedia("(orientation: landscape)");
+// // detect if it's a mobile phone
+// const isMobile = () =>
+//   /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) &&
+//   navigator.maxTouchPoints > 1;
 
-  // check if screen already in landscape
-  CamTriggerHandler(screenStatus);
+// if (true) {
+//   // trigger portrait as default
+//   body.id = "portrait";
+//   const screenStatus = window.matchMedia("(orientation: landscape)");
 
-  // track portrait and landscape mode on orientation change
-  window
-    .matchMedia("(orientation: landscape)")
-    .addEventListener("change", (e) => {
-      console.log("matches ", e.matches);
-      // trigger ui if it's in landscape
-      CamTriggerHandler(e);
-    });
-}
+//   // check if screen already in landscape
+//   CamTriggerHandler(screenStatus);
 
-async function CamTriggerHandler(e) {
-  if (e.matches) {
-    body.id = "landscape"; // trigger landscape ui
+//   // track portrait and landscape mode on orientation change
+//   window
+//     .matchMedia("(orientation: landscape)")
+//     .addEventListener("change", (e) => {
+//       console.log("matches ", e.matches);
+//       // trigger ui if it's in landscape
+//       CamTriggerHandler(e);
+//     });
+// }
 
-    // create camera and store
+// async function CamTriggerHandler(e) {
+//   if (e.matches) {
+//     body.id = "landscape"; // trigger landscape ui
 
-    camera = {
+//     // create camera and store
+
+//     camera = {
+//       video: {
+//         facingMode: { ideal: "environment" },
+//       },
+//       audio: false,
+//     };
+
+//     // ask for permission and store it into stream
+//     navigator.mediaDevices
+//       .getUserMedia(camera)
+//       .then((stream) => {
+//         cameraAccessStatus.innerHTML = `: Granted`;
+//       })
+//       .catch((error) => {
+//         cameraAccessStatus.innerHTML = `: Denied`;
+//         CameraAccessDenied();
+//         console.log(error);
+//       });
+
+//     startCamera();
+//   } else {
+//     body.id = "portrait";
+//   }
+// }
+
+async function startCamera() {
+  try {
+    const constraints = {
       video: {
         facingMode: { ideal: "environment" },
       },
       audio: false,
     };
-
-    // ask for permission and store it into stream
-    navigator.mediaDevices
-      .getUserMedia(camera)
-      .then((stream) => {
-        cameraAccessStatus.innerHTML = `: Granted`;
-      })
-      .catch((error) => {
-        cameraAccessStatus.innerHTML = `: Denied`;
-        CameraAccessDenied();
-        console.log(error);
-      });
-
-    startCamera();
-  } else {
-    body.id = "portrait";
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    const video = document.getElementById("stream");
+    video.srcObject = stream;
+  } catch (err) {
+    // document.getElementById("error").textContent =
+    //   "Camera access failed: " + err.message;
+    // document.getElementById("error").style.display = "block";
   }
 }
 
-async function startCamera() {
-  // try {
-  //   const constraints = {
-  //     video: {
-  //       facingMode: { ideal: "environment" },
-  //     },
-  //     audio: false,
-  //   };
-  //   const stream = await navigator.mediaDevices.getUserMedia(constraints);
-  //   const video = document.getElementById("stream");
-  //   video.srcObject = stream;
-  // } catch (err) {
-  //   document.getElementById("error").textContent =
-  //     "Camera access failed: " + err.message;
-  //   document.getElementById("error").style.display = "block";
-  // }
-}
+// function CameraAccessDenied() {
+//   const ua = navigator.userAgent.toLowerCase();
 
-function CameraAccessDenied() {
-  const ua = navigator.userAgent.toLowerCase();
+//   const isIOS = /iphone|ipad|ipod/.test(ua);
+//   const isAndroid = /android/.test(ua);
 
-  const isIOS = /iphone|ipad|ipod/.test(ua);
-  const isAndroid = /android/.test(ua);
+//   const allInstructionUi = document.querySelectorAll('.instruction');
 
-  const allInstructionUi = document.querySelectorAll('.instruction');
+//   allInstructionUi.forEach((item) => {
+//     item.style.display = 'none';
+//   })
 
-  allInstructionUi.forEach((item) => {
-    item.style.display = 'none';
-  })
+//   if (isIOS) {
+//     document.querySelector(".ios-instruction").style.display = "block";
+//   } else if (isAndroid) {
+//     document.querySelector(".android-instruction").style.display = "block";
+//   } else {
+//     document.querySelector(".other-instruction").style.display = "block";
+//   }
+// }
 
-  if (isIOS) {
-    document.querySelector(".ios-instruction").style.display = "block";
-  } else if (isAndroid) {
-    document.querySelector(".android-instruction").style.display = "block";
-  } else {
-    document.querySelector(".other-instruction").style.display = "block";
-  }
-}
+
+
+
+
+

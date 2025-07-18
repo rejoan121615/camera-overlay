@@ -14,7 +14,7 @@
 <!-- use computer / portrait / landscape for differnt differnt senarios  -->
 
 <body id="computer">
-  <h1 id="output"></h1>
+  <!-- <h1 id="output"></h1>
   <div id="no-support">
     <img src="./assets/user-interface.png" alt="mobile icon">
     <div class="texts">
@@ -33,14 +33,14 @@
 
 
 
-  <div id="camera" data-status="before-start">
+  <div id="camera-prepration" data-status="before-start">
     <div class="start">
-      <h3 class="camera-access"># Requesting camera access <span>...</span></h3>
-      <!-- <h3>✅ Everything is ready. Please open your camera to begin the experience.</h3>
+      <h3 class="camera-access"># Requesting camera access <span>...</span></h3> -->
+  <!-- <h3>✅ Everything is ready. Please open your camera to begin the experience.</h3>
       <div class="btn-wrap">
         <button id="camera-btn">Open Camera</button>
       </div> -->
-      <div class="instruction ios-instruction" >
+  <!-- <div class="instruction ios-instruction">
         <strong>iOS (Safari):</strong>
         <ol>
           <li>Open <strong>Settings</strong> → <strong>Safari</strong></li>
@@ -49,7 +49,7 @@
         </ol>
       </div>
 
-      <div class="instruction android-instruction" >
+      <div class="instruction android-instruction">
         <strong>Android (Chrome):</strong>
         <ol>
           <li>Tap the 🔒 lock icon in the address bar</li>
@@ -58,21 +58,22 @@
           <li>Reload the page</li>
         </ol>
       </div>
-
-      <div class="instruction other-instruction" >
+      <div class="instruction other-instruction">
         Please check your browser settings and allow camera access.
       </div>
-
-
-
     </div>
+  </div> -->
 
-    <!-- <video id="stream" autoplay playsinline controls></video> -->
+  <button id="camera-btn">Open Camera</button>
+
+  <div id="video">
+    <video id="stream" autoplay playsinline controls></video>
+    <div class="left-cover"></div>
+    <div class="right-cover"></div>
   </div>
-  <!-- <div id="error" class="error" style="display: none;"></div> -->
 
 
-  <h1 id="output"></h1>
+
 
 
   <script src="js/script.js"></script>
