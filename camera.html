@@ -10,12 +10,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/script.js"></script>
 </head>
 <!-- use computer / portrait / landscape for differnt differnt senarios  -->
 
 <body id="computer">
-  <!-- <h1 id="output"></h1>
-  <div id="no-support">
+  <div class="no-support">
     <img src="./assets/user-interface.png" alt="mobile icon">
     <div class="texts">
       <h3>⚠️ This experience is designed for mobile devices only.</h3>
@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <div id="rotate-screen">
+  <div class="rotate-screen">
     <img src="./assets/rotation.png" alt="mobile rotate icon">
     <div class="texts">
       <h3>🔄 Please rotate your device to landscape mode for the best experience.
@@ -33,50 +33,50 @@
 
 
 
-  <div id="camera-prepration" data-status="before-start">
-    <div class="start">
-      <h3 class="camera-access"># Requesting camera access <span>...</span></h3> -->
-  <!-- <h3>✅ Everything is ready. Please open your camera to begin the experience.</h3>
-      <div class="btn-wrap">
-        <button id="camera-btn">Open Camera</button>
-      </div> -->
-  <!-- <div class="instruction ios-instruction">
-        <strong>iOS (Safari):</strong>
-        <ol>
-          <li>Open <strong>Settings</strong> → <strong>Safari</strong></li>
-          <li>Tap <strong>Camera</strong> → Set to "Ask" or "Allow"</li>
-          <li>Return to Safari and reload the page</li>
-        </ol>
-      </div>
-
-      <div class="instruction android-instruction">
-        <strong>Android (Chrome):</strong>
-        <ol>
-          <li>Tap the 🔒 lock icon in the address bar</li>
-          <li>Select <strong>Permissions</strong> or <strong>Site settings</strong></li>
-          <li>Set <strong>Camera</strong> to "Allow"</li>
-          <li>Reload the page</li>
-        </ol>
-      </div>
-      <div class="instruction other-instruction">
-        Please check your browser settings and allow camera access.
-      </div>
+  <div class="camera-fail" data-status="before-start">
+    <h3 class="camera-access"># Getting camera access fail. We need your camera access to continue.</h3>
+    <div class="instruction ios-instruction">
+      <strong>iOS (Safari):</strong>
+      <ol>
+        <li>Open <strong>Settings</strong> → <strong>Safari</strong></li>
+        <li>Tap <strong>Camera</strong> → Set to "Ask" or "Allow"</li>
+        <li>Return to Safari and reload the page</li>
+      </ol>
     </div>
-  </div> -->
 
-  <button id="camera-btn">Open Camera</button>
-
-  <div id="video">
-    <video id="stream" autoplay playsinline controls></video>
-    <div class="left-cover"></div>
-    <div class="right-cover"></div>
+    <div class="instruction android-instruction">
+      <strong>Android (Chrome):</strong>
+      <ol>
+        <li>Tap the 🔒 lock icon in the address bar</li>
+        <li>Select <strong>Permissions</strong> or <strong>Site settings</strong></li>
+        <li>Set <strong>Camera</strong> to "Allow"</li>
+        <li>Reload the page</li>
+      </ol>
+    </div>
   </div>
 
 
+  <div class="camera-ui">
+    <input id="img-range" type="range" min="0" max="100" value="40" class="slider" />
+    <div class="camera--preview">
+      <canvas id="canvas" class="camera--canvas"></canvas>
+    </div>
+    <input id="text-range" type="range" min="0" max="200" value="20" class="slider" />
+    <div class="summary">
+      <h3>Summary:</h3>
+      <p>You are looking at the historic Foxton Staircase Locks and the remains of the remarkable Inclined Plane
+        boat lift, once a marvel of Victorian engineering. To your right stands the boiler house, its tall
+        chimney a remnant of the steam age that powered the lift. Above it is the Engine and Cable House. Built
+        in 1900, the lift transported canal boats up and down the steep hillside in giant tanks, saving time and
+        water. Though dismantled in the 1920s, its legacy remains. Imagine the clatter of machinery, the hiss of
+        steam, and the bustle of canal life that once echoed across this tranquil Leicestershire landscape.</p>
+    </div>
+  </div>
 
 
+  <video id="video" autoplay playsinline loop style="display: none;"></video>
+  <img id="overlay-img" src="assets/foxton_image.jpg" alt="Historic foxton staircase locks" style="display: none;">
 
-  <script src="js/script.js"></script>
 </body>
 
 </html>

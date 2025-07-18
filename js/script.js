@@ -1,39 +1,19 @@
 // const body = document.querySelector("body");
-const openCameraBtn = document.querySelector("#camera-btn");
+// const openCameraBtn = document.querySelector("#camera-btn");
 // const cameraAccessStatus = document.querySelector(
-//   "#camera .camera-access span"
+//   "#camera-prepration .camera-access span"
 // );
-// var camera = undefined;
-// var cameraStream = undefined;
 
-//  openCameraBtn.addEventListener("click", (e) => {
-//   e.target.style.display = 'none'
-//   enterFullscreen();
-//   startCamera();
-//  });
+// // camera configration 
+// const cameraConfig = (camera = {
+//   video: {
+//     facingMode: { ideal: "environment" },
+//   },
+//   audio: false,
+// });
 
-// function enterFullscreen() {
-//   const el = document.documentElement;
 
-//   console.log('your el ', el)
-
-//   if (el.requestFullscreen) {
-//     el.requestFullscreen();
-//   } else if (el.webkitRequestFullscreen) {
-//     el.webkitRequestFullscreen(); // Safari
-//   } else if (el.msRequestFullscreen) {
-//     el.msRequestFullscreen(); // IE11
-//   }
-
-//   // optional: lock to landscape if supported
-//   if (screen.orientation && screen.orientation.lock) {
-//     screen.orientation.lock("landscape").catch((err) => {
-//       console.warn("Orientation lock failed:", err);
-//     });
-//   }
-// }
-
-// // detect if it's a mobile phone
+// // // detect if it's a mobile phone
 // const isMobile = () =>
 //   /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) &&
 //   navigator.maxTouchPoints > 1;
@@ -56,54 +36,85 @@ const openCameraBtn = document.querySelector("#camera-btn");
 //     });
 // }
 
+// openCameraBtn.addEventListener("click", (e) => {
+//   navigator.mediaDevices
+//     .getUserMedia(camera)
+//     .then((stream) => {
+//       console.log(stream);
+//       cameraAccessStatus.innerHTML = `: Granted`;
+//     })
+//     .catch((error) => {
+//       cameraAccessStatus.innerHTML = `: Denied`;
+//       console.log(error);
+//     });
+
+  // e.target.style.display = 'none'
+  // enterFullscreen();
+  // startCamera();
+// });
+
+
 // async function CamTriggerHandler(e) {
 //   if (e.matches) {
 //     body.id = "landscape"; // trigger landscape ui
-
-//     // create camera and store
-
-//     camera = {
-//       video: {
-//         facingMode: { ideal: "environment" },
-//       },
-//       audio: false,
-//     };
 
 //     // ask for permission and store it into stream
 //     navigator.mediaDevices
 //       .getUserMedia(camera)
 //       .then((stream) => {
-//         cameraAccessStatus.innerHTML = `: Granted`;
+//         console.log(stream);
+        
 //       })
 //       .catch((error) => {
-//         cameraAccessStatus.innerHTML = `: Denied`;
-//         CameraAccessDenied();
+//         // trigger fail ui 
+//         // CameraAccessDenied();
 //         console.log(error);
 //       });
-
-//     startCamera();
 //   } else {
 //     body.id = "portrait";
 //   }
 // }
 
-async function startCamera() {
-  try {
-    const constraints = {
-      video: {
-        facingMode: { ideal: "environment" },
-      },
-      audio: false,
-    };
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    const video = document.getElementById("stream");
-    video.srcObject = stream;
-  } catch (err) {
-    // document.getElementById("error").textContent =
-    //   "Camera access failed: " + err.message;
-    // document.getElementById("error").style.display = "block";
-  }
-}
+// function enterFullscreen() {
+//   const el = document.documentElement;
+
+//   console.log('your el ', el)
+
+//   if (el.requestFullscreen) {
+//     el.requestFullscreen();
+//   } else if (el.webkitRequestFullscreen) {
+//     el.webkitRequestFullscreen(); // Safari
+//   } else if (el.msRequestFullscreen) {
+//     el.msRequestFullscreen(); // IE11
+//   }
+
+//   // optional: lock to landscape if supported
+//   if (screen.orientation && screen.orientation.lock) {
+//     screen.orientation.lock("landscape").catch((err) => {
+//       console.warn("Orientation lock failed:", err);
+//     });
+//   }
+// }
+
+
+
+// async function startCamera() {
+//   try {
+//     const constraints = {
+//       video: {
+//         facingMode: { ideal: "environment" },
+//       },
+//       audio: false,
+//     };
+//     const stream = await navigator.mediaDevices.getUserMedia(constraints);
+//     const video = document.getElementById("stream");
+//     video.srcObject = stream;
+//   } catch (err) {
+//     document.getElementById("error").textContent =
+//       "Camera access failed: " + err.message;
+//     document.getElementById("error").style.display = "block";
+//   }
+// }
 
 // function CameraAccessDenied() {
 //   const ua = navigator.userAgent.toLowerCase();
@@ -125,9 +136,3 @@ async function startCamera() {
 //     document.querySelector(".other-instruction").style.display = "block";
 //   }
 // }
-
-
-
-
-
-
