@@ -1,0 +1,160 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+
+h3 {
+  font-size: 15px;
+  padding-left: 25px;
+  padding-right: 25px;
+  margin-bottom: 8px;
+}
+
+.no-support,
+.rotate-screen {
+  display: block;
+  text-align: center;
+}
+.no-support img,
+.rotate-screen img {
+  width: 200px;
+  display: inline-block;
+}
+.no-support .texts,
+.rotate-screen .texts {
+  margin-top: 20px;
+}
+.no-support .texts h3:last-child,
+.rotate-screen .texts h3:last-child {
+  margin-top: 10px;
+}
+
+.rotate-screen img {
+  width: 140px;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100svh;
+}
+
+#computer > * {
+  display: none;
+}
+#computer .no-support {
+  display: block;
+}
+
+#portrait > * {
+  display: none;
+}
+#portrait .rotate-screen {
+  display: block;
+}
+
+#camera > * {
+  display: none;
+}
+#camera .camera-ui {
+  display: grid;
+  overflow: hidden;
+}
+
+#fail > * {
+  display: none;
+}
+#fail .camera-fail {
+  display: block;
+}
+
+.camera-fail .instruction {
+  margin-left: 50px;
+  margin-top: 25px;
+}
+
+.camera-ui {
+  display: grid;
+  grid-template-columns: 30px 1fr 30px 0px;
+  grid-template-rows: 1fr;
+  width: 100vw;
+  height: 100svh;
+  justify-content: center;
+  align-items: stretch;
+}
+.camera-ui .slider {
+  writing-mode: bt-lr;
+  -webkit-appearance: slider-vertical;
+  width: 30px;
+  height: 60%;
+  align-self: center;
+}
+.camera-ui canvas {
+  background: #111;
+}
+.camera-ui .summary {
+  padding: 15px 10px;
+  height: 100%;
+  overflow: auto;
+}
+.camera-ui .summary h3 {
+  margin-bottom: 8px;
+  font-size: 20px;
+  padding: 0px;
+}
+.camera-ui .summary p {
+  line-height: 145%;
+  letter-spacing: 1px;
+}
+.camera-ui .camera--preview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.camera-ui .camera--preview canvas {
+  aspect-ratio: 2/1;
+}
+.camera-ui button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  width: 35px;
+  height: 35px;
+  position: fixed;
+}
+.camera-ui button img {
+  width: 100%;
+  height: 100%;
+}
+.camera-ui .btn--back {
+  background-color: #ff7eb8;
+  left: 5px;
+  bottom: 5px;
+}
+.camera-ui .btn--full {
+  background: #2d58e0 url("../assets/fullscreen-icon.png") no-repeat center center;
+  background-size: 60%;
+  left: 5px;
+  top: 5px;
+}
+.camera-ui .btn--full.btn--mini {
+  background-image: url("../assets/miniscreen-icon.png");
+}
+
+#output {
+  display: block;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  color: red;
+}
+
+/*# sourceMappingURL=style.css.map */
