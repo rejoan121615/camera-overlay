@@ -170,8 +170,21 @@ body {
   }
 
   .btn--full {
-    background-color: #2d58e0;
+    background: #2d58e0 url('../assets/fullscreen-icon.png') no-repeat center center;
+    background-size: 60%;
     left: 5px;
     top: 5px;
+    &.btn--mini {
+      background-image:  url('../assets/miniscreen-icon.png');
+    }
   }
+}
+
+
+#output {
+  display: block;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  color: red;
 }

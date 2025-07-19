@@ -3,34 +3,41 @@ const openCameraBtn = document.querySelector("#camera-btn");
 const video = document.querySelector("#video");
 const cameraPreview = document.querySelector(".camera--preview");
 const canvas = document.querySelector("#canvas");
-console.log('canvas' , canvas)
+const output = document.querySelector("#output");
 const canvasContext = canvas.getContext("2d");
 const imageRange = document.querySelector("#img-range");
 const textRange = document.querySelector("#text-range");
 const cameraUi = document.querySelector(".camera-ui");
 const overlayImage = document.querySelector("#overlay-img");
+const backButton = document.querySelector('.btn--back');
+const fullScreenButton = document.querySelector('#screen-btn');
 let imageOpacity = 0.5; // Initial overlay opacity
-var baseHeight = undefined;
+var baseHeight = getHeight();
+
+output.innerHTML = baseHeight;
 
 // get screen width and height for canvas video and image 
 
 const previewWidth = body.clientWidth;
 const previewHeight = body.clientHeight;
-const heightCompare = ((previewWidth - 60 ) / 2 ) > previewHeight ?  previewHeight - 20 : ((previewWidth - 80 ) / 2 );
-      baseHeight = heightCompare
+// const heightCompare = ((previewWidth - 60 ) / 2 ) > previewHeight ?  previewHeight - 20 : ((previewWidth - 80 ) / 2 );
+// const heightCompare = getHeight();
+//       baseHeight = heightCompare
 
 // set canvas width and height 
 canvas.width = baseHeight * 2
 canvas.height = baseHeight
 
 
+function getHeight () {
+  return ((body.clientWidth - 60 ) / 2 ) > body.clientHeight ?  body.clientHeight - 20 : ((body.clientWidth - 80 ) / 2 );
+}
+
+
 function canvasResizer (range) {
-  baseHeight = heightCompare - (range / 2)
+  baseHeight = getHeight() - (range / 2)
   canvas.width = baseHeight * 2
   canvas.height = baseHeight
-  console.log('base ', baseHeight)
-  // canvas.width = baseHeight
-  // canvas.height = baseHeight
 }
 
 // camera configration
@@ -116,24 +123,39 @@ function drawFrame() {
 }
 
 // move screen into full screen 
-function enterFullscreen() {
+function FullscreenHandler() {
   const el = document.documentElement;
 
-  if (el.requestFullscreen) {
+  // if full screen already 
+  if (
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.msFullscreenElement
+  ) {
+
+    fullScreenButton.classList.remove('btn--mini');
+
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen(); // Safari
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen(); // IE11
+    }
+  } else if (el.requestFullscreen) {
+    fullScreenButton.classList.add('btn--mini');
     el.requestFullscreen();
   } else if (el.webkitRequestFullscreen) {
+    fullScreenButton.classList.add('btn--mini');
     el.webkitRequestFullscreen(); // Safari
   } else if (el.msRequestFullscreen) {
+    fullScreenButton.classList.add('btn--mini');
     el.msRequestFullscreen(); // IE11
   }
 
-  // optional: lock to landscape if supported
-  if (screen.orientation && screen.orientation.lock) {
-    screen.orientation.lock("landscape").catch((err) => {
-      console.warn("Orientation lock failed:", err);
-    });
-  }
+
 }
+
 
 
 // Update image opacity from slider
@@ -151,4 +173,15 @@ textRange.addEventListener("input", (e) => {
   canvasResizer(rangeValue);
 });
 
+
+
+backButton.addEventListener('click', () => {
+  
+  console.log('close window ');
+})
+
+
+fullScreenButton.addEventListener('click', (e) => {
+  FullscreenHandler();
+})
 
