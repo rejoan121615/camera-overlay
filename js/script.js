@@ -1,138 +1,157 @@
-// const body = document.querySelector("body");
-// const openCameraBtn = document.querySelector("#camera-btn");
-// const cameraAccessStatus = document.querySelector(
-//   "#camera-prepration .camera-access span"
-// );
+const body = document.querySelector("body");
+const openCameraBtn = document.querySelector("#camera-btn");
+const video = document.querySelector("#video");
+const cameraPreview = document.querySelector(".camera--preview");
+const canvas = document.querySelector("#canvas");
+const canvasContext = canvas.getContext("2d");
+const imageRange = document.querySelector("#img-range");
+const textRange = document.querySelector("#text-range");
+const cameraUi = document.querySelector(".camera-ui");
+const overlayImage = document.querySelector("#overlay-img");
+let imageOpacity = 0.5; // Initial overlay opacity
 
-// // camera configration 
-// const cameraConfig = (camera = {
-//   video: {
-//     facingMode: { ideal: "environment" },
-//   },
-//   audio: false,
-// });
+// get screen width and height for canvas video and image 
 
-
-// // // detect if it's a mobile phone
-// const isMobile = () =>
-//   /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) &&
-//   navigator.maxTouchPoints > 1;
-
-// if (true) {
-//   // trigger portrait as default
-//   body.id = "portrait";
-//   const screenStatus = window.matchMedia("(orientation: landscape)");
-
-//   // check if screen already in landscape
-//   CamTriggerHandler(screenStatus);
-
-//   // track portrait and landscape mode on orientation change
-//   window
-//     .matchMedia("(orientation: landscape)")
-//     .addEventListener("change", (e) => {
-//       console.log("matches ", e.matches);
-//       // trigger ui if it's in landscape
-//       CamTriggerHandler(e);
-//     });
-// }
-
-// openCameraBtn.addEventListener("click", (e) => {
-//   navigator.mediaDevices
-//     .getUserMedia(camera)
-//     .then((stream) => {
-//       console.log(stream);
-//       cameraAccessStatus.innerHTML = `: Granted`;
-//     })
-//     .catch((error) => {
-//       cameraAccessStatus.innerHTML = `: Denied`;
-//       console.log(error);
-//     });
-
-  // e.target.style.display = 'none'
-  // enterFullscreen();
-  // startCamera();
-// });
+const previewWidth = body.clientWidth;
+const previewHeight = body.clientHeight;
 
 
-// async function CamTriggerHandler(e) {
-//   if (e.matches) {
-//     body.id = "landscape"; // trigger landscape ui
+const baseHeight = ((previewWidth - 60 ) / 2 ) > previewHeight ?  previewHeight - 20 : ((previewWidth - 80 ) / 2 );
 
-//     // ask for permission and store it into stream
-//     navigator.mediaDevices
-//       .getUserMedia(camera)
-//       .then((stream) => {
-//         console.log(stream);
-        
-//       })
-//       .catch((error) => {
-//         // trigger fail ui 
-//         // CameraAccessDenied();
-//         console.log(error);
-//       });
-//   } else {
-//     body.id = "portrait";
-//   }
-// }
-
-// function enterFullscreen() {
-//   const el = document.documentElement;
-
-//   console.log('your el ', el)
-
-//   if (el.requestFullscreen) {
-//     el.requestFullscreen();
-//   } else if (el.webkitRequestFullscreen) {
-//     el.webkitRequestFullscreen(); // Safari
-//   } else if (el.msRequestFullscreen) {
-//     el.msRequestFullscreen(); // IE11
-//   }
-
-//   // optional: lock to landscape if supported
-//   if (screen.orientation && screen.orientation.lock) {
-//     screen.orientation.lock("landscape").catch((err) => {
-//       console.warn("Orientation lock failed:", err);
-//     });
-//   }
-// }
+// set canvas width and height 
+canvas.width = baseHeight * 2
+canvas.height = baseHeight
 
 
+function canvasResizer () {
+  // console.log('width ', cameraPreview.clientWidth);
+  // console.log('height ',  cameraPreview.clientHeight);
 
-// async function startCamera() {
-//   try {
-//     const constraints = {
-//       video: {
-//         facingMode: { ideal: "environment" },
-//       },
-//       audio: false,
-//     };
-//     const stream = await navigator.mediaDevices.getUserMedia(constraints);
-//     const video = document.getElementById("stream");
-//     video.srcObject = stream;
-//   } catch (err) {
-//     document.getElementById("error").textContent =
-//       "Camera access failed: " + err.message;
-//     document.getElementById("error").style.display = "block";
-//   }
-// }
+  const cameraWidth = cameraPreview.clientWidth;
+  const cameraHeight = cameraPreview.clientHeight;
 
-// function CameraAccessDenied() {
-//   const ua = navigator.userAgent.toLowerCase();
+  console.log(cameraWidth)
+  console.log(cameraHeight)
 
-//   const isIOS = /iphone|ipad|ipod/.test(ua);
-//   const isAndroid = /android/.test(ua);
 
-//   const allInstructionUi = document.querySelectorAll('.instruction');
+}
 
-//   allInstructionUi.forEach((item) => {
-//     item.style.display = 'none';
-//   })
+// camera configration
+const cameraConfig = {
+  video: {
+    facingMode: { ideal: "environment" },
+  },
+  audio: false,
+};
 
-//   if (isIOS) {
-//     document.querySelector(".ios-instruction").style.display = "block";
-//   } else if (isAndroid) {
-//     document.querySelector(".android-instruction").style.display = "block";
-//   } else {
-//     document.querySelector(".other-instruction").style.display = "block";
-//   }
-// }
+// detect if it's a mobile phone
+const isMobile = () =>
+  /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) &&
+  navigator.maxTouchPoints > 1;
+
+if (isMobile) {
+  // trigger portrait as default
+  body.id = "portrait";
+  const screenStatus = window.matchMedia("(orientation: landscape)");
+
+  // check if screen already in landscape
+  LandscapeHandler(screenStatus);
+
+  // track portrait and landscape mode on orientation change
+  window
+    .matchMedia("(orientation: landscape)")
+    .addEventListener("change", (e) => {
+      console.log("matches ", e.matches);
+      // trigger ui if it's in landscape
+      LandscapeHandler(e);
+    });
+}
+
+async function LandscapeHandler(e) {
+  if (e.matches) {
+    body.id = "camera"; // trigger landscape ui
+
+    // ask for permission and store it into stream
+    navigator.mediaDevices
+      .getUserMedia({
+        video: {
+          facingMode: { ideal: 'environment' },
+          aspectRatio: 2,
+          width: { ideal: baseHeight * 2  },
+          height: { ideal: baseHeight }
+        },
+        audio: false
+      })
+      .then((stream) => {
+        const track = stream.getTracks()[0]
+        console.log(track.getSettings());
+        console.log(cameraPreview.clientWidth)
+        console.log(cameraPreview.clientHeight)
+
+        video.srcObject = stream;
+        video.play();
+        // canvas.width = cameraPreview.clientWidth 
+        // canvas.height = cameraPreview.clientWidth / 2
+        drawFrame();
+
+        // enterFullscreen(); // trigger full screen
+      })
+      .catch((error) => {
+        // trigger fail ui
+        // CameraAccessDenied();
+        console.log(error);
+      });
+  } else {
+    body.id = "portrait";
+  }
+}
+
+// Draw video + overlay image in canvas
+function drawFrame() {
+  // Draw video
+  canvasContext.globalAlpha = 1;
+  canvasContext.drawImage(video, 0, 0, baseHeight * 2, baseHeight);
+
+  // Draw overlay image with dynamic opacity
+  canvasContext.globalAlpha = imageOpacity;
+  canvasContext.drawImage(overlayImage, 0, 0, canvas.width, canvas.height);
+
+  canvasContext.globalAlpha = 1;
+  requestAnimationFrame(drawFrame);
+}
+
+// move screen into full screen 
+function enterFullscreen() {
+  const el = document.documentElement;
+
+  if (el.requestFullscreen) {
+    el.requestFullscreen();
+  } else if (el.webkitRequestFullscreen) {
+    el.webkitRequestFullscreen(); // Safari
+  } else if (el.msRequestFullscreen) {
+    el.msRequestFullscreen(); // IE11
+  }
+
+  // optional: lock to landscape if supported
+  if (screen.orientation && screen.orientation.lock) {
+    screen.orientation.lock("landscape").catch((err) => {
+      console.warn("Orientation lock failed:", err);
+    });
+  }
+}
+
+
+// Update image opacity from slider
+imageRange.addEventListener("input", (e) => {
+  const rangeValue = e.target.value;
+  imageOpacity = rangeValue <= 0 ? 0 : (rangeValue - 1) / 99; // Range between 0 and 1
+});
+
+// update text width
+cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${textRange.value}px`; // update the text position on load
+
+textRange.addEventListener("input", (e) => {
+  const rangeValue = e.target.value;
+  cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${rangeValue}px`;
+  canvasResizer();
+});

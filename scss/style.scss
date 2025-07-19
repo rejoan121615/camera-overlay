@@ -76,6 +76,7 @@ body {
 
   .camera-ui {
     display: grid;
+    overflow: hidden;
   }
 }
 
@@ -101,21 +102,22 @@ body {
   display: grid;
   grid-template-columns: 30px 1fr 30px 0px;
   grid-template-rows: 1fr;
-  height: 100vmin;
   width: 100vw;
-  align-items: center;
+  height: 100svh;
   justify-content: center;
+  align-items: stretch;
 
   .slider {
     writing-mode: bt-lr;
     -webkit-appearance: slider-vertical;
     width: 30px;
     height: 60%;
+    align-self: center;
   }
 
   canvas {
-    width: 100%;
-    height: 100%;
+    // width: 100%;
+    // height: 100%;
     // aspect-ratio: 16/ 9;
     //   height: auto;
     background: #111;
@@ -128,6 +130,8 @@ body {
 
     h3 {
       margin-bottom: 8px;
+      font-size: 20px;
+      padding: 0px;
     }
 
     p {
@@ -138,30 +142,15 @@ body {
 
   .camera--preview {
     position: relative;
-  }
-
-  .button {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: rgb(165, 3, 3);
+    justify-content: center;
+    canvas {
+      aspect-ratio: 2 / 1;
+      // width: 100%;
+      // height: auto;
+    }
   }
 
-  .button--back {
-    position: fixed;
-    left: 50px;
-    top: 0;
-  }
-
-  .button__image {
-    width: 20px;
-  }
-
-  .button__text {
-    margin-left: 15px;
-    color: white;
-    font-weight: bold;
-  }
+ 
 }
