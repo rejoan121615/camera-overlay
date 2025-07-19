@@ -87,8 +87,6 @@ async function LandscapeHandler(e) {
 
         video.srcObject = stream;
         video.play();
-        // canvas.width = cameraPreview.clientWidth 
-        // canvas.height = cameraPreview.clientWidth / 2
         drawFrame();
 
         // enterFullscreen(); // trigger full screen
@@ -152,3 +150,5 @@ textRange.addEventListener("input", (e) => {
   cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${rangeValue}px`;
   canvasResizer(rangeValue);
 });
+
+
