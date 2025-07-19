@@ -3,37 +3,34 @@ const openCameraBtn = document.querySelector("#camera-btn");
 const video = document.querySelector("#video");
 const cameraPreview = document.querySelector(".camera--preview");
 const canvas = document.querySelector("#canvas");
+console.log('canvas' , canvas)
 const canvasContext = canvas.getContext("2d");
 const imageRange = document.querySelector("#img-range");
 const textRange = document.querySelector("#text-range");
 const cameraUi = document.querySelector(".camera-ui");
 const overlayImage = document.querySelector("#overlay-img");
 let imageOpacity = 0.5; // Initial overlay opacity
+var baseHeight = undefined;
 
 // get screen width and height for canvas video and image 
 
 const previewWidth = body.clientWidth;
 const previewHeight = body.clientHeight;
-
-
-const baseHeight = ((previewWidth - 60 ) / 2 ) > previewHeight ?  previewHeight - 20 : ((previewWidth - 80 ) / 2 );
+const heightCompare = ((previewWidth - 60 ) / 2 ) > previewHeight ?  previewHeight - 20 : ((previewWidth - 80 ) / 2 );
+      baseHeight = heightCompare
 
 // set canvas width and height 
 canvas.width = baseHeight * 2
 canvas.height = baseHeight
 
 
-function canvasResizer () {
-  // console.log('width ', cameraPreview.clientWidth);
-  // console.log('height ',  cameraPreview.clientHeight);
-
-  const cameraWidth = cameraPreview.clientWidth;
-  const cameraHeight = cameraPreview.clientHeight;
-
-  console.log(cameraWidth)
-  console.log(cameraHeight)
-
-
+function canvasResizer (range) {
+  baseHeight = heightCompare - (range / 2)
+  canvas.width = baseHeight * 2
+  canvas.height = baseHeight
+  console.log('base ', baseHeight)
+  // canvas.width = baseHeight
+  // canvas.height = baseHeight
 }
 
 // camera configration
@@ -153,5 +150,5 @@ cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${textRange.value}px`; // up
 textRange.addEventListener("input", (e) => {
   const rangeValue = e.target.value;
   cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${rangeValue}px`;
-  canvasResizer();
+  canvasResizer(rangeValue);
 });
