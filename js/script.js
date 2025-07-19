@@ -3,47 +3,47 @@ const openCameraBtn = document.querySelector("#camera-btn");
 const video = document.querySelector("#video");
 const cameraPreview = document.querySelector(".camera--preview");
 const canvas = document.querySelector("#canvas");
-const output = document.querySelector("#output");
+// const output = document.querySelector("#output");
 const canvasContext = canvas.getContext("2d");
 const imageRange = document.querySelector("#img-range");
 const textRange = document.querySelector("#text-range");
 const cameraUi = document.querySelector(".camera-ui");
 const overlayImage = document.querySelector("#overlay-img");
-const backButton = document.querySelector('.btn--back');
-const fullScreenButton = document.querySelector('#screen-btn');
+const backButton = document.querySelector(".btn--back");
+const fullScreenButton = document.querySelector("#screen-btn");
 let imageOpacity = 0.5; // Initial overlay opacity
-var baseHeight = getHeight();
 
-output.innerHTML = baseHeight;
-
-// get screen width and height for canvas video and image 
+// get screen width and height for canvas video and image
 
 const previewWidth = body.clientWidth;
 const previewHeight = body.clientHeight;
-// const heightCompare = ((previewWidth - 60 ) / 2 ) > previewHeight ?  previewHeight - 20 : ((previewWidth - 80 ) / 2 );
-// const heightCompare = getHeight();
-//       baseHeight = heightCompare
+// set canvas width and height
+canvas.width = getHeight() * 2;
+canvas.height = getHeight();
 
-// set canvas width and height 
-canvas.width = baseHeight * 2
-canvas.height = baseHeight
+function getHeight() {
 
+  const bodyTag = document.querySelector('body');
 
-function getHeight () {
-  return ((body.clientWidth - 60 ) / 2 ) > body.clientHeight ?  body.clientHeight - 20 : ((body.clientWidth - 80 ) / 2 );
+  return (bodyTag.clientWidth - 60) / 2 > bodyTag.clientHeight
+    ? bodyTag.clientHeight - 20
+    : (bodyTag.clientWidth - 80) / 2;
 }
 
-
-function canvasResizer (range) {
-  baseHeight = getHeight() - (range / 2)
-  canvas.width = baseHeight * 2
-  canvas.height = baseHeight
+function canvasResizer() {
+  // output.innerHTML = `resize canvas ${getHeight()} `
+  // baseHeight = getHeight() - range / 2;
+  canvas.width = getHeight() * 2;
+  canvas.height = getHeight();
 }
 
 // camera configration
 const cameraConfig = {
   video: {
     facingMode: { ideal: "environment" },
+    aspectRatio: 2,
+    width: { ideal: getHeight() * 2 },
+    height: { ideal: getHeight() },
   },
   audio: false,
 };
@@ -53,7 +53,7 @@ const isMobile = () =>
   /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) &&
   navigator.maxTouchPoints > 1;
 
-if (isMobile) {
+if (isMobile()) {
   // trigger portrait as default
   body.id = "portrait";
   const screenStatus = window.matchMedia("(orientation: landscape)");
@@ -75,32 +75,18 @@ async function LandscapeHandler(e) {
   if (e.matches) {
     body.id = "camera"; // trigger landscape ui
 
+    canvasResizer(); // update canvas width and height before start 
+
     // ask for permission and store it into stream
     navigator.mediaDevices
-      .getUserMedia({
-        video: {
-          facingMode: { ideal: 'environment' },
-          aspectRatio: 2,
-          width: { ideal: baseHeight * 2  },
-          height: { ideal: baseHeight }
-        },
-        audio: false
-      })
+      .getUserMedia(cameraConfig)
       .then((stream) => {
-        const track = stream.getTracks()[0]
-        console.log(track.getSettings());
-        console.log(cameraPreview.clientWidth)
-        console.log(cameraPreview.clientHeight)
-
         video.srcObject = stream;
         video.play();
         drawFrame();
-
-        // enterFullscreen(); // trigger full screen
       })
       .catch((error) => {
-        // trigger fail ui
-        // CameraAccessDenied();
+        body.id = "fail";
         console.log(error);
       });
   } else {
@@ -112,7 +98,7 @@ async function LandscapeHandler(e) {
 function drawFrame() {
   // Draw video
   canvasContext.globalAlpha = 1;
-  canvasContext.drawImage(video, 0, 0, baseHeight * 2, baseHeight);
+  canvasContext.drawImage(video, 0, 0, getHeight() * 2, getHeight());
 
   // Draw overlay image with dynamic opacity
   canvasContext.globalAlpha = imageOpacity;
@@ -122,18 +108,17 @@ function drawFrame() {
   requestAnimationFrame(drawFrame);
 }
 
-// move screen into full screen 
+// move screen into full screen
 function FullscreenHandler() {
   const el = document.documentElement;
 
-  // if full screen already 
+  // if full screen already
   if (
     document.fullscreenElement ||
     document.webkitFullscreenElement ||
     document.msFullscreenElement
   ) {
-
-    fullScreenButton.classList.remove('btn--mini');
+    fullScreenButton.classList.remove("btn--mini");
 
     if (document.exitFullscreen) {
       document.exitFullscreen();
@@ -143,20 +128,17 @@ function FullscreenHandler() {
       document.msExitFullscreen(); // IE11
     }
   } else if (el.requestFullscreen) {
-    fullScreenButton.classList.add('btn--mini');
+    fullScreenButton.classList.add("btn--mini");
     el.requestFullscreen();
   } else if (el.webkitRequestFullscreen) {
-    fullScreenButton.classList.add('btn--mini');
+    fullScreenButton.classList.add("btn--mini");
     el.webkitRequestFullscreen(); // Safari
   } else if (el.msRequestFullscreen) {
-    fullScreenButton.classList.add('btn--mini');
+    fullScreenButton.classList.add("btn--mini");
     el.msRequestFullscreen(); // IE11
   }
 
-
 }
-
-
 
 // Update image opacity from slider
 imageRange.addEventListener("input", (e) => {
@@ -170,18 +152,16 @@ cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${textRange.value}px`; // up
 textRange.addEventListener("input", (e) => {
   const rangeValue = e.target.value;
   cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${rangeValue}px`;
-  canvasResizer(rangeValue);
+  // canvasResizer(rangeValue);
+  // canvasResizer(rangeValue);
 });
 
+backButton.addEventListener("click", () => {
+  console.log("close window ");
+});
 
-
-backButton.addEventListener('click', () => {
-  
-  console.log('close window ');
-})
-
-
-fullScreenButton.addEventListener('click', (e) => {
+fullScreenButton.addEventListener("click", (e) => {
   FullscreenHandler();
-})
-
+  // resize canvas after doing full screen or minimize 
+  // canvasResizer();
+});
