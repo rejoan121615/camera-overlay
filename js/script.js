@@ -3,7 +3,6 @@ const openCameraBtn = document.querySelector("#camera-btn");
 const video = document.querySelector("#video");
 const cameraPreview = document.querySelector(".camera--preview");
 const canvas = document.querySelector("#canvas");
-// const output = document.querySelector("#output");
 const canvasContext = canvas.getContext("2d");
 const imageRange = document.querySelector("#img-range");
 const textRange = document.querySelector("#text-range");
@@ -12,30 +11,25 @@ const overlayImage = document.querySelector("#overlay-img");
 const backButton = document.querySelector(".btn--back");
 const fullScreenButton = document.querySelector("#screen-btn");
 let imageOpacity = 0.5; // Initial overlay opacity
+var canvasSizeMemory = { width: undefined , height: undefined }
 
-// get screen width and height for canvas video and image
 
-const previewWidth = body.clientWidth;
-const previewHeight = body.clientHeight;
 // set canvas width and height
-canvas.width = getHeight() * 2;
-canvas.height = getHeight();
-
-function getHeight() {
-
-  const bodyTag = document.querySelector('body');
-
-  return (bodyTag.clientWidth - 60) / 2 > bodyTag.clientHeight
-    ? bodyTag.clientHeight - 20
-    : (bodyTag.clientWidth - 80) / 2;
-}
-
-function canvasResizer() {
-  // output.innerHTML = `resize canvas ${getHeight()} `
-  // baseHeight = getHeight() - range / 2;
+function canvasResize () {
   canvas.width = getHeight() * 2;
   canvas.height = getHeight();
+  canvasSizeMemory = { width: getHeight() * 2, height: getHeight()}
 }
+
+
+// canvasResize();
+
+function getHeight() {
+  return (cameraPreview.clientWidth - 60) / 2 > cameraPreview.clientHeight
+    ? cameraPreview.clientHeight - 20
+    : (cameraPreview.clientWidth - 80) / 2;
+}
+
 
 // camera configration
 const cameraConfig = {
@@ -53,7 +47,7 @@ const isMobile = () =>
   /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) &&
   navigator.maxTouchPoints > 1;
 
-if (isMobile()) {
+if (isMobile) {
   // trigger portrait as default
   body.id = "portrait";
   const screenStatus = window.matchMedia("(orientation: landscape)");
@@ -75,7 +69,10 @@ async function LandscapeHandler(e) {
   if (e.matches) {
     body.id = "camera"; // trigger landscape ui
 
-    canvasResizer(); // update canvas width and height before start 
+    // update canvas width and height before start
+    // canvas.width = getHeight() * 2;
+    // canvas.height = getHeight();
+    canvasResize();
 
     // ask for permission and store it into stream
     navigator.mediaDevices
@@ -98,7 +95,7 @@ async function LandscapeHandler(e) {
 function drawFrame() {
   // Draw video
   canvasContext.globalAlpha = 1;
-  canvasContext.drawImage(video, 0, 0, getHeight() * 2, getHeight());
+  canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
 
   // Draw overlay image with dynamic opacity
   canvasContext.globalAlpha = imageOpacity;
@@ -137,7 +134,6 @@ function FullscreenHandler() {
     fullScreenButton.classList.add("btn--mini");
     el.msRequestFullscreen(); // IE11
   }
-
 }
 
 // Update image opacity from slider
@@ -152,8 +148,8 @@ cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${textRange.value}px`; // up
 textRange.addEventListener("input", (e) => {
   const rangeValue = e.target.value;
   cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${rangeValue}px`;
-  // canvasResizer(rangeValue);
-  // canvasResizer(rangeValue);
+  canvas.width = canvasSizeMemory.width - rangeValue
+  
 });
 
 backButton.addEventListener("click", () => {
@@ -162,6 +158,4 @@ backButton.addEventListener("click", () => {
 
 fullScreenButton.addEventListener("click", (e) => {
   FullscreenHandler();
-  // resize canvas after doing full screen or minimize 
-  // canvasResizer();
 });
