@@ -10,26 +10,24 @@ const cameraUi = document.querySelector(".camera-ui");
 const overlayImage = document.querySelector("#overlay-img");
 const backButton = document.querySelector(".btn--back");
 const fullScreenButton = document.querySelector("#screen-btn");
-let imageOpacity = 0.5; // Initial overlay opacity
-var canvasSizeMemory = { width: undefined , height: undefined }
 
+// storage
+let imageOpacity = 0.5; // Initial overlay opacity
+var canvasSizeMemory = { width: undefined, height: undefined };
 
 // set canvas width and height
-function canvasResize () {
+function canvasResize() {
   canvas.width = getHeight() * 2;
   canvas.height = getHeight();
-  canvasSizeMemory = { width: getHeight() * 2, height: getHeight()}
+  canvasSizeMemory = { width: getHeight() * 2, height: getHeight() };
 }
 
-
 // canvasResize();
-
 function getHeight() {
   return (cameraPreview.clientWidth - 60) / 2 > cameraPreview.clientHeight
     ? cameraPreview.clientHeight - 20
     : (cameraPreview.clientWidth - 80) / 2;
 }
-
 
 // camera configration
 const cameraConfig = {
@@ -78,6 +76,7 @@ async function LandscapeHandler(e) {
     navigator.mediaDevices
       .getUserMedia(cameraConfig)
       .then((stream) => {
+        videoStreamStorage = stream; // store stream to use it later
         video.srcObject = stream;
         video.play();
         drawFrame();
@@ -88,7 +87,18 @@ async function LandscapeHandler(e) {
       });
   } else {
     body.id = "portrait";
+    stopVideo();
   }
+}
+
+// stop current video
+function stopVideo() {
+  let stream = video.srcObject;
+
+  if (stream && stream.getTracks) {
+    stream.getTracks().forEach((track) => track.stop());
+  }
+  video.srcObject = null;
 }
 
 // Draw video + overlay image in canvas
@@ -148,8 +158,7 @@ cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${textRange.value}px`; // up
 textRange.addEventListener("input", (e) => {
   const rangeValue = e.target.value;
   cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${rangeValue}px`;
-  canvas.width = canvasSizeMemory.width - rangeValue
-  
+  canvas.width = canvasSizeMemory.width - rangeValue;
 });
 
 backButton.addEventListener("click", () => {
