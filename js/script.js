@@ -3,7 +3,6 @@ const openCameraBtn = document.querySelector("#camera-btn");
 const video = document.querySelector("#video");
 const cameraPreview = document.querySelector(".camera--preview");
 const canvas = document.querySelector("#canvas");
-// const output = document.querySelector("#output");
 const canvasContext = canvas.getContext("2d");
 const imageRange = document.querySelector("#img-range");
 const textRange = document.querySelector("#text-range");
@@ -11,30 +10,16 @@ const cameraUi = document.querySelector(".camera-ui");
 const overlayImage = document.querySelector("#overlay-img");
 const backButton = document.querySelector(".btn--back");
 const fullScreenButton = document.querySelector("#screen-btn");
+const output = document.querySelector("#output");
+
+// storage
 let imageOpacity = 0.5; // Initial overlay opacity
-
-// get screen width and height for canvas video and image
-
-const previewWidth = body.clientWidth;
-const previewHeight = body.clientHeight;
-// set canvas width and height
-canvas.width = getHeight() * 2;
-canvas.height = getHeight();
+var canvasSizeMemory = { width: undefined, height: undefined };
 
 function getHeight() {
-
-  const bodyTag = document.querySelector('body');
-
-  return (bodyTag.clientWidth - 60) / 2 > bodyTag.clientHeight
-    ? bodyTag.clientHeight - 20
-    : (bodyTag.clientWidth - 80) / 2;
-}
-
-function canvasResizer() {
-  // output.innerHTML = `resize canvas ${getHeight()} `
-  // baseHeight = getHeight() - range / 2;
-  canvas.width = getHeight() * 2;
-  canvas.height = getHeight();
+  return (cameraPreview.clientWidth - 60) / 2 > cameraPreview.clientHeight
+    ? cameraPreview.clientHeight - 20
+    : (cameraPreview.clientWidth - 80) / 2;
 }
 
 // camera configration
@@ -75,12 +60,11 @@ async function LandscapeHandler(e) {
   if (e.matches) {
     body.id = "camera"; // trigger landscape ui
 
-    canvasResizer(); // update canvas width and height before start 
-
     // ask for permission and store it into stream
     navigator.mediaDevices
       .getUserMedia(cameraConfig)
       .then((stream) => {
+        videoStreamStorage = stream; // store stream to use it later
         video.srcObject = stream;
         video.play();
         drawFrame();
@@ -91,14 +75,25 @@ async function LandscapeHandler(e) {
       });
   } else {
     body.id = "portrait";
+    stopVideo();
   }
+}
+
+// stop current video
+function stopVideo() {
+  let stream = video.srcObject;
+
+  if (stream && stream.getTracks) {
+    stream.getTracks().forEach((track) => track.stop());
+  }
+  video.srcObject = null;
 }
 
 // Draw video + overlay image in canvas
 function drawFrame() {
   // Draw video
   canvasContext.globalAlpha = 1;
-  canvasContext.drawImage(video, 0, 0, getHeight() * 2, getHeight());
+  canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
 
   // Draw overlay image with dynamic opacity
   canvasContext.globalAlpha = imageOpacity;
@@ -137,7 +132,6 @@ function FullscreenHandler() {
     fullScreenButton.classList.add("btn--mini");
     el.msRequestFullscreen(); // IE11
   }
-
 }
 
 // Update image opacity from slider
@@ -147,13 +141,12 @@ imageRange.addEventListener("input", (e) => {
 });
 
 // update text width
-cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${textRange.value}px`; // update the text position on load
+cameraUi.style.gridTemplateColumns = `35px 1fr 35px ${textRange.value}px`; // update the text position on load
 
 textRange.addEventListener("input", (e) => {
   const rangeValue = e.target.value;
-  cameraUi.style.gridTemplateColumns = `30px 1fr 30px ${rangeValue}px`;
-  // canvasResizer(rangeValue);
-  // canvasResizer(rangeValue);
+  cameraUi.style.gridTemplateColumns = `35px 1fr 35px ${rangeValue}px`;
+  // canvas.width = canvasSizeMemory.width - rangeValue;
 });
 
 backButton.addEventListener("click", () => {
@@ -162,6 +155,37 @@ backButton.addEventListener("click", () => {
 
 fullScreenButton.addEventListener("click", (e) => {
   FullscreenHandler();
-  // resize canvas after doing full screen or minimize 
-  // canvasResizer();
 });
+
+// resize observer to observe full screen / mini screen
+const resizeObserver = new ResizeObserver((entries) => {
+  for (const entry of entries) {
+    const { width, height } = entry.contentRect;
+
+    let videoSize = getMax2to1Size(width, height - 20);
+    canvas.width = videoSize.width;
+    canvas.height = videoSize.height;
+  }
+});
+
+function getMax2to1Size(containerWidth, containerHeight) {
+  // Try using full container width first
+  const expectedHeight = containerWidth / 2;
+
+  if (expectedHeight <= containerHeight) {
+    // Fits: full width, scaled height
+    return {
+      width: containerWidth,
+      height: expectedHeight,
+    };
+  } else {
+    // Use full height, scale width to maintain 2:1 ratio
+    const adjustedWidth = containerHeight * 2;
+    return {
+      width: adjustedWidth,
+      height: containerHeight,
+    };
+  }
+}
+
+resizeObserver.observe(cameraPreview);
