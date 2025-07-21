@@ -98,7 +98,7 @@ body {
 
 .camera-ui {
   display: grid;
-  grid-template-columns: 30px 1fr 30px 0px;
+  grid-template-columns: 35px 1fr 35px 0px;
   grid-template-rows: 1fr;
   width: 100vw;
   height: 100svh;
@@ -143,6 +143,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     canvas {
       aspect-ratio: 2 / 1;
       // width: 100%;
@@ -184,7 +185,7 @@ body {
 #output {
   display: block;
   position: fixed;
-  left: 50%;
+  left: 10%;
   top: 50%;
   color: red;
 }
