@@ -38,7 +38,7 @@ const isMobile = () =>
   /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) &&
   navigator.maxTouchPoints > 1;
 
-if (isMobile) {
+if (isMobile()) {
   // trigger portrait as default
   body.id = "portrait";
   const screenStatus = window.matchMedia("(orientation: landscape)");
