@@ -180,6 +180,16 @@ body {
       background-image:  url('../assets/miniscreen-icon.png');
     }
   }
+
+  .btn--slide {
+    background: #2d58e0 url('../assets/left-double-arrow.png') no-repeat center center;
+    background-size: 60%;
+    right: 5px;
+    top: 5px;
+    &.btn--expand {
+      background-image:  url('../assets/right-double-arrow.png');
+    }
+  }
 }
 
 

@@ -149,6 +149,15 @@ body {
 .camera-ui .btn--full.btn--mini {
   background-image: url("../assets/miniscreen-icon.png");
 }
+.camera-ui .btn--slide {
+  background: #2d58e0 url("../assets/left-double-arrow.png") no-repeat center center;
+  background-size: 60%;
+  right: 5px;
+  top: 5px;
+}
+.camera-ui .btn--slide.btn--expand {
+  background-image: url("../assets/right-double-arrow.png");
+}
 
 #output {
   display: block;

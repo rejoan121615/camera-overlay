@@ -5,7 +5,7 @@ const cameraPreview = document.querySelector(".camera--preview");
 const canvas = document.querySelector("#canvas");
 const canvasContext = canvas.getContext("2d");
 const imageRange = document.querySelector("#img-range");
-const textRange = document.querySelector("#text-range");
+const summaryBtn = document.querySelector("#summary-btn");
 const cameraUi = document.querySelector(".camera-ui");
 const overlayImage = document.querySelector("#overlay-img");
 const backButton = document.querySelector(".btn--back");
@@ -14,7 +14,6 @@ const output = document.querySelector("#output");
 
 // storage
 let imageOpacity = 0.5; // Initial overlay opacity
-var canvasSizeMemory = { width: undefined, height: undefined };
 
 function getHeight() {
   return (cameraPreview.clientWidth - 60) / 2 > cameraPreview.clientHeight
@@ -38,7 +37,7 @@ const isMobile = () =>
   /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) &&
   navigator.maxTouchPoints > 1;
 
-if (isMobile()) {
+if (isMobile) {
   // trigger portrait as default
   body.id = "portrait";
   const screenStatus = window.matchMedia("(orientation: landscape)");
@@ -140,14 +139,19 @@ imageRange.addEventListener("input", (e) => {
   imageOpacity = rangeValue <= 0 ? 0 : (rangeValue - 1) / 99; // Range between 0 and 1
 });
 
-// update text width
-cameraUi.style.gridTemplateColumns = `35px 1fr 35px ${textRange.value}px`; // update the text position on load
 
-textRange.addEventListener("input", (e) => {
-  const rangeValue = e.target.value;
-  cameraUi.style.gridTemplateColumns = `35px 1fr 35px ${rangeValue}px`;
-  // canvas.width = canvasSizeMemory.width - rangeValue;
-});
+
+summaryBtn.addEventListener('click', (e) => {
+  const summaryBtnClass = summaryBtn.classList;
+
+  if (summaryBtnClass.contains('btn--expand')) {
+    summaryBtnClass.remove('btn--expand');
+    cameraUi.style.gridTemplateColumns = `35px 1fr 35px 0px`;
+  } else {
+    summaryBtnClass.add('btn--expand');
+    cameraUi.style.gridTemplateColumns = `35px 1fr 35px 200px`;
+  }
+})
 
 backButton.addEventListener("click", () => {
   console.log("close window ");
