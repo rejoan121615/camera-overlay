@@ -10,7 +10,6 @@ const cameraUi = document.querySelector(".camera-ui");
 const overlayImage = document.querySelector("#overlay-img");
 const backButton = document.querySelector(".btn--back");
 const fullScreenButton = document.querySelector("#screen-btn");
-const output = document.querySelector("#output");
 
 // storage
 let imageOpacity = 0.5; // Initial overlay opacity
@@ -37,7 +36,7 @@ const isMobile = () =>
   /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) &&
   navigator.maxTouchPoints > 1;
 
-if (isMobile) {
+if (isMobile()) {
   // trigger portrait as default
   body.id = "portrait";
   const screenStatus = window.matchMedia("(orientation: landscape)");
